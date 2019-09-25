@@ -1,22 +1,23 @@
 version: '3'
 services:
   client:
-    build: ../client
+    build: ./open-hotel-client
     command: 'yarn --cwd packages/client dev'
     ports:
       - '8081:8080'
     volumes:
-      - .:/code
+      - ./open-hotel-client:/code
       - /code/node_modules
     networks:
       openHotel: {}
   emulator:
-    build: ../client
-    command: 'yarn --cwd packages/orion-emulator start:dev'
+    build: ./orion-emulator
+    working_dir: '/sirius'
+    command: 'yarn start:dev'
     ports:
       - '3000:3000'
     volumes:
-      - .:/code
+      - ./orion-emulator:/code
       - /code/node_modules
     networks:
       openHotel: {}
@@ -38,9 +39,9 @@ services:
         - client
         - emulator
       volumes:
-          - ./docker/nginx:/var/www/html
-          - ./docker/nginx/log:/var/log/nginx
-          - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+          - ./nginx:/var/www/html
+          - ./nginx/log:/var/log/nginx
+          - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       ports:
           - "8080:80"
           - "443:443"
