@@ -2,7 +2,7 @@ version: '3'
 services:
   client:
     build: ./open-hotel-client
-    command: 'yarn --cwd packages/client dev'
+    command: 'yarn --cwd packages/client dev --mode=docker'
     ports:
       - '8081:8080'
     volumes:
@@ -17,8 +17,8 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./orion-emulator:/code
-      - /code/node_modules
+      - ./orion-emulator:/sirius
+      - /sirius/node_modules
     networks:
       openHotel: {}
 
