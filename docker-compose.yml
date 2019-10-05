@@ -10,12 +10,26 @@ services:
       - /code/node_modules
     networks:
       openHotel: {}
+
+  cleiton:
+    build: ./orion-emulator
+    working_dir: '/sirius/packages/cleiton'
+    command: 'yarn docker:dev'
+    depends_on:
+      - nginx
+    volumes:
+      - ./orion-emulator:/sirius
+      - /sirius/packages/cleiton/node_modules
+    networks:
+      openHotel: {}
+  
   emulator:
     build: ./orion-emulator
-    working_dir: '/sirius'
+    working_dir: '/sirius/packages/emulator'
     command: 'yarn start:dev'
     ports:
       - '3000:3000'
+      - '65432:65432'
     volumes:
       - ./orion-emulator:/sirius
       - /sirius/node_modules
@@ -43,6 +57,8 @@ services:
           - ./nginx/log:/var/log/nginx
           - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       ports:
+          - '44113:44113'
+          - '1234:1234'
           - "8080:80"
           - "443:443"
       networks:
