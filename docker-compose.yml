@@ -10,38 +10,30 @@ services:
       - /code/node_modules
     networks:
       openHotel: {}
-
-  cleiton:
-    build: ./orion-emulator
-    working_dir: '/sirius/packages/cleiton'
-    command: 'yarn docker:dev'
-    depends_on:
-      - nginx
-    volumes:
-      - ./orion-emulator:/sirius
-      - /sirius/packages/cleiton/node_modules
-    networks:
-      openHotel: {}
   
   emulator:
     build: ./orion-emulator
     working_dir: '/sirius/packages/emulator'
-    command: 'yarn start:dev'
+    command: 'yarn dev'
     ports:
       - '3000:3000'
       - '65432:65432'
+      - '9229:9229'
+      - '9229:9229/udp'
     volumes:
       - ./orion-emulator:/sirius
       - /sirius/node_modules
     networks:
       openHotel: {}
 
-  mongo:
-    image: mongo
+  arango:
+    image: arangodb/arangodb:3.5.1
     volumes:
-      - ./docker/db:/data/db
+      - ./docker/db:/var/lib/arangodb3
     ports:
-      - '27017:27017'
+      - '8529:8529'
+    environment:
+      - ARANGO_ROOT_PASSWORD=12345
     networks:
       openHotel: {}
 
